@@ -3,6 +3,10 @@ language: c
 before_install:
  - sudo add-apt-repository ppa:dns/gnu -y #newer autoconf
  - sudo apt-get update 
- - sudo apt-get install check gfortran libopenmpi-dev openmpi-bin numactl autoconf libnuma-dev doxygen
+ - sudo apt-get install check gfortran libopenmpi-dev openmpi-bin numactl autoconf libnuma-dev doxygen 
+ - pip install --user codecov
 
-script: autoreconf -i && ./configure CC=mpicc CXX=mpic++ FC=mpif90 && make -j4 && CC=mpicc CXX=mpic++ FC=mpif90 make distcheck
+script: autoreconf -i && ./configure CC=mpicc CXX=mpic++ FC=mpif90 CCFLAGS="--coverage" CXXFLAGS="--coverage" && make -j4 && make check && CC=mpicc CXX=mpic++ FC=mpif90 make distcheck
+
+after_success: codecov
+
